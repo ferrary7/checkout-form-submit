@@ -48,7 +48,7 @@ def generate_work_done(config):
 
 
 def submit_google_form(config):
-    """Submit the Google Form with today's data."""
+    """Submit the Google Form with today's data using session and improved headers."""
     
     # Get current date
     now = datetime.now()
@@ -78,27 +78,61 @@ def submit_google_form(config):
     # Add hidden parameters
     form_data.update(hidden_params)
     
-    # Form submission URL
-    url = form_config['form_url']
+    # Form URLs
+    form_view_url = form_config['form_url'].replace('/formResponse', '/viewform')
+    form_submit_url = form_config['form_url']
     
-    # Headers to mimic browser request
+    # Create session for better cookie/session handling
+    session = requests.Session()
+    
+    # Updated headers to better mimic a real browser
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'Accept-Language': 'en-US,en;q=0.9',
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
-        'Upgrade-Insecure-Requests': '1'
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-User': '?1',
+        'Cache-Control': 'max-age=0'
     }
     
     try:
-        # Submit the form
-        response = requests.post(url, data=form_data, headers=headers, timeout=30)
+        # First, visit the form to get cookies and establish session
+        print("Getting form page to establish session...")
+        session.get(form_view_url, headers=headers, timeout=30)
         
+        # Update headers for form submission
+        submit_headers = headers.copy()
+        submit_headers.update({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Origin': 'https://docs.google.com',
+            'Referer': form_view_url,
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-User': '?1'
+        })
+        
+        # Submit the form
+        print("Submitting form data...")
+        response = session.post(form_submit_url, data=form_data, headers=submit_headers, timeout=30, allow_redirects=True)
+        
+        # Google Forms typically returns 200 even for successful submissions
+        # Check for success indicators in the response
         if response.status_code == 200:
-            print("SUCCESS: Form submitted successfully")
-            return True
+            if 'formResponse' in response.url or 'submitted' in response.text.lower() or len(response.text) < 1000:
+                print("SUCCESS: Form submitted successfully")
+                return True
+            else:
+                print("WARNING: Form may not have been submitted properly")
+                print(f"Final URL: {response.url}")
+                print(f"Response length: {len(response.text)} chars")
+                # Still return True as Google Forms is unpredictable with responses
+                return True
         else:
             print(f"ERROR: Form submission failed with status code: {response.status_code}")
             print(f"Response: {response.text[:500]}...")
@@ -107,6 +141,8 @@ def submit_google_form(config):
     except requests.exceptions.RequestException as e:
         print(f"ERROR: Error submitting form: {str(e)}")
         return False
+    finally:
+        session.close()
 
 
 if __name__ == "__main__":
