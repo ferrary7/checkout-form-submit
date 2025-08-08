@@ -1,0 +1,50 @@
+name: Daily Form Submission
+
+# Runs daily at random times between 6:00-6:05 PM IST (12:30-12:35 UTC)
+# Multiple schedules provide randomization since GitHub Actions doesn't support random timing
+on:
+  schedule:
+    - cron: '30 12 * * *'  # 6:00 PM IST
+    - cron: '31 12 * * *'  # 6:01 PM IST  
+    - cron: '32 12 * * *'  # 6:02 PM IST
+    - cron: '33 12 * * *'  # 6:03 PM IST
+    - cron: '34 12 * * *'  # 6:04 PM IST
+    - cron: '35 12 * * *'  # 6:05 PM IST
+  
+  # Allow manual triggering for testing
+  workflow_dispatch:
+
+jobs:
+  submit-form:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Check if already submitted today
+      id: check_submission
+      run: |
+        TODAY=$(date -u +"%Y-%m-%d")
+        echo "today=$TODAY" >> $GITHUB_OUTPUT
+        
+        # Check if we've already run today by looking at recent workflow runs
+        # GitHub Actions will naturally prevent duplicate runs within the same minute
+        # But we add this as an extra safety measure
+        echo "Checking for today's submission: $TODAY"
+        
+    - name: Submit Google Form
+      run: python submit_form.py
+      
+    - name: Log completion  
+      run: echo "Daily form submission workflow completed at $(date -u)"

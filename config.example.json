@@ -1,0 +1,57 @@
+{
+  "form_config": {
+    "form_url": "https://docs.google.com/forms/d/e/YOUR_FORM_ID_HERE/formResponse",
+    "field_mappings": {
+      "name": "entry.YOUR_NAME_FIELD_ID",
+      "work_done": "entry.YOUR_WORK_DONE_FIELD_ID",
+      "difficulties": "entry.YOUR_DIFFICULTIES_FIELD_ID",
+      "agenda": "entry.YOUR_AGENDA_FIELD_ID",
+      "date_year": "entry.YOUR_DATE_FIELD_ID_year",
+      "date_month": "entry.YOUR_DATE_FIELD_ID_month",
+      "date_day": "entry.YOUR_DATE_FIELD_ID_day",
+      "productivity_rating": "entry.YOUR_PRODUCTIVITY_FIELD_ID"
+    },
+    "hidden_params": {
+      "fbzx": "YOUR_FBZX_VALUE",
+      "partialResponse": "[null,null,\"YOUR_FBZX_VALUE\"]",
+      "pageHistory": "0"
+    }
+  },
+  "user_data": {
+    "name": "Your Name Here",
+    "difficulties_default": "NA",
+    "agenda_default": "Continue the good work",
+    "productivity_rating_range": {
+      "min": 1,
+      "max": 5
+    }
+  },
+  "work_tasks": {
+    "required_tasks": [
+      "Task 1",
+      "Task 2", 
+      "Task 3"
+    ],
+    "optional_tasks": [
+      {
+        "task": "Optional Task 1",
+        "probability": 0.7
+      },
+      {
+        "task": "Optional Task 2",
+        "probability": 0.3
+      }
+    ]
+  },
+  "schedule_config": {
+    "timezone_description": "Your timezone description - e.g. EST 5:00 PM to 5:05 PM",
+    "utc_schedules": [
+      "0 22 * * *",
+      "1 22 * * *",
+      "2 22 * * *",
+      "3 22 * * *",
+      "4 22 * * *",
+      "5 22 * * *"
+    ]
+  }
+}

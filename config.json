@@ -1,0 +1,57 @@
+{
+  "form_config": {
+    "form_url": "https://docs.google.com/forms/d/e/1FAIpQLSf6tBvFdvViORG7GcmGJS7nGcTBtVrrXiOJyN29rQBR7ZRS8Q/formResponse",
+    "field_mappings": {
+      "name": "entry.1831920389",
+      "work_done": "entry.813312076",
+      "difficulties": "entry.1348060563",
+      "agenda": "entry.1447373607",
+      "date_year": "entry.668287072_year",
+      "date_month": "entry.668287072_month",
+      "date_day": "entry.668287072_day",
+      "productivity_rating": "entry.879595974"
+    },
+    "hidden_params": {
+      "fbzx": "-5373888768991565133",
+      "partialResponse": "[null,null,\"-5373888768991565133\"]",
+      "pageHistory": "0"
+    }
+  },
+  "user_data": {
+    "name": "Aryan Sharma",
+    "difficulties_default": "NA",
+    "agenda_default": "Repeat the efforts",
+    "productivity_rating_range": {
+      "min": 3,
+      "max": 5
+    }
+  },
+  "work_tasks": {
+    "required_tasks": [
+      "DSA",
+      "SW module work", 
+      "Interview prep"
+    ],
+    "optional_tasks": [
+      {
+        "task": "LPU Project",
+        "probability": 0.8
+      },
+      {
+        "task": "Meeting",
+        "probability": 0.4
+      }
+    ]
+  },
+  "schedule_config": {
+    "timezone_description": "IST (India Standard Time) - 6:00 PM to 6:05 PM",
+    "utc_schedules": [
+      "30 12 * * *",
+      "31 12 * * *",
+      "32 12 * * *",
+      "33 12 * * *",
+      "34 12 * * *",
+      "35 12 * * *"
+    ]
+  }
+}
